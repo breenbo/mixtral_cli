@@ -43,7 +43,8 @@ impl MixtralAiApi {
             role: "user",
             content: question,
         };
-        let model = String::from("mistral-tiny");
+        // TODO: set model as cli argument, default to tiny
+        let model = String::from("mistral-small");
         Request {
             model,
             // model: AiModel::MistralTiny.to_string(),
@@ -149,14 +150,22 @@ fn main() -> Result<(), AppError> {
     //
     // prompt the user in a loop
     loop {
-        print!("\n\nEnter your question ('quit' to exit): ");
+        print!("\n\nEnter your question: ");
         io::stdout().flush()?;
         let mut question = String::new();
         io::stdin().read_line(&mut question)?;
         //
         // check if user wants to quit (break the loop)
         //
-        if question.trim().to_lowercase() == "quit" {
+        let test_string = question.trim().to_lowercase();
+        if [
+            String::from("quit"),
+            String::from("exit"),
+            String::from("q"),
+            String::from("ex"),
+        ]
+        .contains(&test_string)
+        {
             break;
         }
         //
