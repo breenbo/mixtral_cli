@@ -5,15 +5,16 @@ mod cli;
 
 fn main() -> Result<(), AppError> {
     //
+    // define url endpoint
+    //
+    const ENDPOINT: &str = "https://api.mistral.ai/v1/chat/completions";
+    //
     // set the api key
     //
-    let reset_key = cli::get_reset_api();
-    let api_key = ConfigFile::check_config(reset_key)?;
+    let api_key = ConfigFile::check_config()?;
     //
-    //
-    // define url endpoint
-    const ENDPOINT: &str = "https://api.mistral.ai/v1/chat/completions";
     // set model as cli argument, default to tiny
+    //
     let ai_model = cli::get_ai_model();
 
     let mixtral_ai = MixtralAiApi::new(ENDPOINT, &api_key);

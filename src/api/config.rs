@@ -33,7 +33,8 @@ impl ConfigFile {
         Ok(config)
     }
 
-    pub fn check_config(reset_key: bool) -> Result<String, AppError> {
+    pub fn check_config() -> Result<String, AppError> {
+        let reset_key = cli::get_reset_api();
         let mut config = Self::load_config()?;
         // 1. cli: get the reset from cli
         // 3. api: check if the api key is good by sending a request and get the response
