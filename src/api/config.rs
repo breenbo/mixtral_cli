@@ -1,6 +1,6 @@
-use std::io::{self, Write};
-
 use serde::{Deserialize, Serialize};
+
+use crate::cli;
 
 use super::AppError;
 
@@ -24,11 +24,7 @@ impl ConfigFile {
     }
 
     fn set_api_key() -> Result<ConfigFile, AppError> {
-        println!("\nEnter your MixtralAi api key: ");
-        io::stdout().flush()?;
-        let mut key = String::new();
-        io::stdin().read_line(&mut key)?;
-        let api_key = String::from(key.trim_end());
+        let api_key = cli::get_api_key()?;
 
         let config = Self::new(api_key);
 

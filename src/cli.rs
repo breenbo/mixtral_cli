@@ -60,6 +60,16 @@ pub fn check_quit(question: &str) -> bool {
     ["quit", "exit", "q", "ex", ""].contains(&question)
 }
 
+pub fn get_api_key() -> Result<String, AppError> {
+    println!("\nEnter your MixtralAi api key: ");
+    io::stdout().flush()?;
+    let mut key = String::new();
+    io::stdin().read_line(&mut key)?;
+    let api_key = String::from(key.trim_end());
+
+    Ok(api_key)
+}
+
 pub fn display_response(result: Result<Value, AppError>) -> Result<(), AppError> {
     match result {
         Ok(data) => {
