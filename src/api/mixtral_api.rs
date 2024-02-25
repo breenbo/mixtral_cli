@@ -26,16 +26,25 @@ pub struct MixtralAiApi<'a> {
     token: &'a str,
 }
 //
-impl MixtralAiApi<'_> {
-    pub fn new<'a>(base_url: &'a str, token: &'a str) -> MixtralAiApi<'a> {
-        MixtralAiApi { base_url, token }
+impl<'a> MixtralAiApi<'_> {
+    //
+    // define url endpoint
+    //
+    const ENDPOINT: &'a str = "https://api.mistral.ai/v1/chat/completions";
+    //
+    //
+    pub fn new(token: &str) -> MixtralAiApi {
+        MixtralAiApi {
+            base_url: Self::ENDPOINT,
+            token,
+        }
     }
 
     pub fn new_api_error(code: i64, msg: &'static str) -> MixtralAiApiError {
         MixtralAiApiError { code, msg }
     }
 
-    fn prepare_request<'a>(&'a self, question: &'a str, model: &'a str) -> Request<'_> {
+    fn prepare_request<'b>(&'b self, question: &'b str, model: &'b str) -> Request<'_> {
         let message = QuestionMessage {
             role: "user",
             content: question,

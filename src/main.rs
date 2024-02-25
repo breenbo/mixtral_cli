@@ -5,10 +5,6 @@ mod cli;
 
 fn main() -> Result<(), AppError> {
     //
-    // define url endpoint
-    //
-    const ENDPOINT: &str = "https://api.mistral.ai/v1/chat/completions";
-    //
     // set the api key
     //
     let api_key = ConfigFile::check_config()?;
@@ -17,7 +13,7 @@ fn main() -> Result<(), AppError> {
     //
     let ai_model = cli::get_ai_model();
 
-    let mixtral_ai = MixtralAiApi::new(ENDPOINT, &api_key);
+    let mixtral_ai = MixtralAiApi::new(&api_key);
     //
     // prompt the user in a loop
     //
