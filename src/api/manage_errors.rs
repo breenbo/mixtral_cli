@@ -25,6 +25,7 @@ pub enum AppError {
     Reqwest(reqwest::Error),
     Api(MixtralAiApiError),
     Dotenv(dotenv::Error),
+    Confy(confy::ConfyError),
 }
 impl From<io::Error> for AppError {
     fn from(err: io::Error) -> Self {
@@ -51,6 +52,11 @@ impl From<dotenv::Error> for AppError {
         AppError::Dotenv(err)
     }
 }
+impl From<confy::ConfyError> for AppError {
+    fn from(err: confy::ConfyError) -> Self {
+        AppError::Confy(err)
+    }
+}
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -59,6 +65,7 @@ impl fmt::Display for AppError {
             AppError::Reqwest(err) => write!(f, "Reqwest error: {}", err),
             AppError::Api(err) => write!(f, "Mixtral API error: {}", err),
             AppError::Dotenv(err) => write!(f, "Dotenv error: {}", err),
+            AppError::Confy(err) => write!(f, "Confy error: {}", err),
         }
     }
 }

@@ -2,7 +2,8 @@ use dotenv::dotenv;
 use std::env;
 
 mod api;
-use api::{AppError, MixtralAiApi};
+use api::{AppError, ConfigFile, MixtralAiApi};
+
 mod cli;
 
 fn main() -> Result<(), AppError> {
@@ -12,6 +13,19 @@ fn main() -> Result<(), AppError> {
         Ok(val) => val,
         Err(_) => panic!("API key not set"),
     };
+    //
+    // ConfigFile::set_api_key(false)?;
+    //
+    let config = ConfigFile::load_config()?;
+    // 1. cli: get the reset from cli
+    let reset_api = cli::get_reset_api();
+    // 3. api: check if the api key is good by sending a request and get the response
+    // 2. if not initialized or reset asked by user
+    if !config.api_key_initialized || reset_api {
+        dbg!(config);
+        ConfigFile::set_api_key()?;
+    }
+
     //
     //
     // define url endpoint

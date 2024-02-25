@@ -14,6 +14,8 @@ struct Args {
         default_value = "tiny"
     )]
     model: String,
+    #[arg(long, short = 'r', help = "Ask to reset the api key", num_args = 0)]
+    reset: bool,
 }
 // able to choose modele to use, default to tiny
 pub fn get_ai_model() -> String {
@@ -29,6 +31,12 @@ pub fn get_ai_model() -> String {
     //
 
     ai_model.to_string()
+}
+
+pub fn get_reset_api() -> bool {
+    let args = Args::parse();
+
+    args.reset
 }
 
 fn display_header(ai_model: &str) {
