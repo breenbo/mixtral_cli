@@ -20,12 +20,12 @@ struct Request<'a> {
 }
 //
 //
-pub struct MixtralAiApi {
-    base_url: String,
-    token: String,
+pub struct MixtralAiApi<'a> {
+    base_url: &'a str,
+    token: &'a str,
 }
-impl MixtralAiApi {
-    pub fn new(base_url: String, token: String) -> Self {
+impl MixtralAiApi<'_> {
+    pub fn new<'a>(base_url: &'a str, token: &'a str) -> MixtralAiApi<'a> {
         MixtralAiApi { base_url, token }
     }
 
@@ -61,7 +61,7 @@ impl MixtralAiApi {
         // make post request
         //
         let response = client
-            .post(&self.base_url)
+            .post(self.base_url)
             .header("Authorization", format!("Bearer {}", self.token))
             .json(&request)
             .send()?

@@ -1,4 +1,9 @@
+use std::io::{self, Write};
+
 use clap::Parser;
+use serde_json::Value;
+
+use crate::api::{AppError, MixtralAiApi};
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -24,4 +29,48 @@ pub fn get_ai_model() -> String {
     //
 
     ai_model.to_string()
+}
+
+fn display_header(ai_model: &str) {
+    print!("\n\n -----------------------------------");
+    print!("\n  --- Mixtral AI - {} ---", ai_model);
+    print!("\n -----------------------------------");
+    print!("\nEnter your question: ");
+}
+
+pub fn get_question(ai_model: &str) -> Result<String, AppError> {
+    display_header(ai_model);
+    //
+    io::stdout().flush()?;
+    let mut question = String::new();
+    io::stdin().read_line(&mut question)?;
+
+    Ok(question)
+}
+
+pub fn check_quit(question: &str) -> bool {
+    ["quit", "exit", "q", "ex", ""].contains(&question)
+}
+
+pub fn display_response(result: Result<Value, AppError>) -> Result<(), AppError> {
+    match result {
+        Ok(data) => {
+            // Extract the answer from the JSON object
+            let answer = data["choices"][0]["message"]["content"].as_str().ok_or(
+                MixtralAiApi::new_api_error(500, "Could not find answer field in JSON response"),
+            )?;
+
+            print!("\n {}", answer);
+        }
+        Err(e @ AppError::Api(..)) | Err(e @ AppError::Reqwest(..)) => {
+            // Print out API errors or connection errors
+            eprintln!("Error: {}", e);
+        }
+        Err(e) => {
+            // Propagate any other errors upwards
+            return Err(e);
+        }
+    }
+
+    Ok(())
 }
