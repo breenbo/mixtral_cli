@@ -24,7 +24,6 @@ pub enum AppError {
     Json(serde_json::Error),
     Reqwest(reqwest::Error),
     Api(MixtralAiApiError),
-    Dotenv(dotenv::Error),
     Confy(confy::ConfyError),
 }
 impl From<io::Error> for AppError {
@@ -47,11 +46,6 @@ impl From<MixtralAiApiError> for AppError {
         AppError::Api(err)
     }
 }
-impl From<dotenv::Error> for AppError {
-    fn from(err: dotenv::Error) -> Self {
-        AppError::Dotenv(err)
-    }
-}
 impl From<confy::ConfyError> for AppError {
     fn from(err: confy::ConfyError) -> Self {
         AppError::Confy(err)
@@ -64,7 +58,6 @@ impl fmt::Display for AppError {
             AppError::Json(err) => write!(f, "JSON error: {}", err),
             AppError::Reqwest(err) => write!(f, "Reqwest error: {}", err),
             AppError::Api(err) => write!(f, "Mixtral API error: {}", err),
-            AppError::Dotenv(err) => write!(f, "Dotenv error: {}", err),
             AppError::Confy(err) => write!(f, "Confy error: {}", err),
         }
     }
