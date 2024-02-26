@@ -1,7 +1,7 @@
 mod config;
 mod manage_errors;
-mod mixtral_api;
+mod mistral_api;
 
 pub use config::ConfigFile;
 pub use manage_errors::AppError;
-pub use mixtral_api::MixtralAiApi;
+pub use mistral_api::MistralAiApi;

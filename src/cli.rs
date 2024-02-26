@@ -3,14 +3,14 @@ use std::io::{self, Write};
 use clap::Parser;
 use serde_json::Value;
 
-use crate::api::{AppError, MixtralAiApi};
+use crate::api::{AppError, MistralAiApi};
 
 #[derive(Parser, Debug)]
 struct Args {
     #[arg(
         long,
         short = 'm',
-        help = "Choose AI model: tiny, small, medium",
+        help = "Choose AI model: tiny, small, medium, large",
         default_value = "tiny"
     )]
     model: String,
@@ -24,9 +24,9 @@ pub fn get_ai_model() -> String {
     // check the ai model. If not in list, default to tiny
     //
     let ai_model = match args.model.as_str() {
-        "small" => "mistral-small",
-        "medium" => "mistral-medium",
-        _ => "mistral-tiny",
+        "small" => "mistral-small-latest",
+        "large" => "mistral-large-latest",
+        _ => "open-mistral-7b",
     };
     //
 
@@ -41,7 +41,7 @@ pub fn get_reset_api() -> bool {
 
 fn display_header(ai_model: &str) {
     print!("\n\n -----------------------------------");
-    print!("\n  --- Mixtral AI - {} ---", ai_model);
+    print!("\n  --- Mistral AI - {} ---", ai_model);
     print!("\n -----------------------------------");
     print!("\nEnter your question: ");
 }
@@ -61,7 +61,7 @@ pub fn check_quit(question: &str) -> bool {
 }
 
 pub fn get_api_key() -> Result<String, AppError> {
-    println!("\nEnter your MixtralAi api key: ");
+    println!("\nEnter your MistralAi api key: ");
     io::stdout().flush()?;
     let mut key = String::new();
     io::stdin().read_line(&mut key)?;
@@ -75,7 +75,7 @@ pub fn display_response(result: Result<Value, AppError>) -> Result<(), AppError>
         Ok(data) => {
             // Extract the answer from the JSON object
             let answer = data["choices"][0]["message"]["content"].as_str().ok_or(
-                MixtralAiApi::new_api_error(500, "Could not find answer field in JSON response"),
+                MistralAiApi::new_api_error(500, "Could not find answer field in JSON response"),
             )?;
 
             print!("\n {}", answer);

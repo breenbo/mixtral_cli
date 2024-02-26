@@ -19,7 +19,7 @@ impl ConfigFile {
     }
 
     fn load_config() -> Result<ConfigFile, AppError> {
-        let config: ConfigFile = confy::load("mixtral_cli", "config")?;
+        let config: ConfigFile = confy::load("mistral_cli", "config")?;
         Ok(config)
     }
 
@@ -28,7 +28,7 @@ impl ConfigFile {
 
         let config = Self::new(api_key);
 
-        confy::store("mixtral_cli", "config", &config)?;
+        confy::store("mistral_cli", "config", &config)?;
 
         Ok(config)
     }

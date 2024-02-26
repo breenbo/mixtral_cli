@@ -1,3 +1,4 @@
+use clipboard::{ClipboardContext, ClipboardProvider};
 use reqwest::{
     blocking::Client,
     header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE},
@@ -5,9 +6,9 @@ use reqwest::{
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use super::{manage_errors::MixtralAiApiError, AppError};
+use super::{manage_errors::MistralAiApiError, AppError};
 //
-// Mixtral AI struct
+// Mistral AI struct
 //
 #[derive(Debug, Serialize, Deserialize)]
 struct QuestionMessage<'a> {
@@ -21,27 +22,27 @@ struct Request<'a> {
 }
 //
 //
-pub struct MixtralAiApi<'a> {
+pub struct MistralAiApi<'a> {
     base_url: &'a str,
     token: &'a str,
 }
 //
-impl<'a> MixtralAiApi<'_> {
+impl<'a> MistralAiApi<'_> {
     //
     // define url endpoint
     //
     const ENDPOINT: &'a str = "https://api.mistral.ai/v1/chat/completions";
     //
     //
-    pub fn new(token: &str) -> MixtralAiApi {
-        MixtralAiApi {
+    pub fn new(token: &str) -> MistralAiApi {
+        MistralAiApi {
             base_url: Self::ENDPOINT,
             token,
         }
     }
 
-    pub fn new_api_error(code: i64, msg: &'static str) -> MixtralAiApiError {
-        MixtralAiApiError { code, msg }
+    pub fn new_api_error(code: i64, msg: &'static str) -> MistralAiApiError {
+        MistralAiApiError { code, msg }
     }
 
     fn prepare_request<'b>(&'b self, question: &'b str, model: &'b str) -> Request<'_> {
@@ -79,6 +80,17 @@ impl<'a> MixtralAiApi<'_> {
             .text()?;
         // Parse the JSON response
         let data: Value = serde_json::from_str(&response)?;
+        //
+        // copy response into clipboard
+        //
+        let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+        let _ = ctx.set_contents(String::from(
+            data["choices"][0]["message"]["content"]
+                .as_str()
+                .unwrap_or(""),
+        ));
+
+        //
         //
         Ok(data)
     }

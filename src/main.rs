@@ -1,5 +1,5 @@
 mod api;
-use api::{AppError, ConfigFile, MixtralAiApi};
+use api::{AppError, ConfigFile, MistralAiApi};
 
 mod cli;
 
@@ -13,7 +13,7 @@ fn main() -> Result<(), AppError> {
     //
     let ai_model = cli::get_ai_model();
 
-    let mixtral_ai = MixtralAiApi::new(&api_key);
+    let mistral_ai = MistralAiApi::new(&api_key);
     //
     // prompt the user in a loop
     //
@@ -25,13 +25,13 @@ fn main() -> Result<(), AppError> {
             break;
         }
         //
-        // Send the question to Mixtral
+        // Send the question to Mistral
         //
-        let result = mixtral_ai.post_request(&question, &ai_model);
+        let response = mistral_ai.post_request(&question, &ai_model);
         //
         // Display the response
         //
-        cli::display_response(result)?;
+        cli::display_response(response)?;
     }
     //
     Ok(())

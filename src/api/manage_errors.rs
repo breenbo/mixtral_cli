@@ -6,13 +6,13 @@ use std::{fmt, io};
 //
 //
 #[derive(Debug)]
-pub struct MixtralAiApiError {
+pub struct MistralAiApiError {
     pub code: i64,
     pub msg: &'static str,
 }
-impl fmt::Display for MixtralAiApiError {
+impl fmt::Display for MistralAiApiError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "Mixtral AI error {}: {}", self.code, self.msg)
+        writeln!(f, "Mistral AI error {}: {}", self.code, self.msg)
     }
 }
 //
@@ -23,7 +23,7 @@ pub enum AppError {
     Io(io::Error),
     Json(serde_json::Error),
     Reqwest(reqwest::Error),
-    Api(MixtralAiApiError),
+    Api(MistralAiApiError),
     Confy(confy::ConfyError),
 }
 impl From<io::Error> for AppError {
@@ -41,8 +41,8 @@ impl From<reqwest::Error> for AppError {
         AppError::Reqwest(err)
     }
 }
-impl From<MixtralAiApiError> for AppError {
-    fn from(err: MixtralAiApiError) -> Self {
+impl From<MistralAiApiError> for AppError {
+    fn from(err: MistralAiApiError) -> Self {
         AppError::Api(err)
     }
 }
