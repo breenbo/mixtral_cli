@@ -25,6 +25,7 @@ pub enum AppError {
     Reqwest(reqwest::Error),
     Api(MistralAiApiError),
     Confy(confy::ConfyError),
+    Arboard(arboard::Error),
 }
 impl From<io::Error> for AppError {
     fn from(err: io::Error) -> Self {
@@ -51,6 +52,11 @@ impl From<confy::ConfyError> for AppError {
         AppError::Confy(err)
     }
 }
+impl From<arboard::Error> for AppError {
+    fn from(err: arboard::Error) -> Self {
+        AppError::Arboard(err)
+    }
+}
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -59,6 +65,7 @@ impl fmt::Display for AppError {
             AppError::Reqwest(err) => write!(f, "Reqwest error: {}", err),
             AppError::Api(err) => write!(f, "Mixtral API error: {}", err),
             AppError::Confy(err) => write!(f, "Confy error: {}", err),
+            AppError::Arboard(err) => write!(f, "Confy error: {}", err),
         }
     }
 }

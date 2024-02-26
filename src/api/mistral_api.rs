@@ -1,4 +1,4 @@
-use clipboard::{ClipboardContext, ClipboardProvider};
+use arboard::Clipboard;
 use reqwest::{
     blocking::Client,
     header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE},
@@ -83,13 +83,12 @@ impl<'a> MistralAiApi<'_> {
         //
         // copy response into clipboard
         //
-        let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-        let _ = ctx.set_contents(String::from(
+        let mut clipboard = Clipboard::new()?;
+        clipboard.set_text(
             data["choices"][0]["message"]["content"]
                 .as_str()
                 .unwrap_or(""),
-        ));
-
+        )?;
         //
         //
         Ok(data)
